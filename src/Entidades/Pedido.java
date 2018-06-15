@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package Entidades;
 
 import java.io.Serializable;
@@ -12,8 +13,6 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -36,7 +35,6 @@ public class Pedido implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id_pedido")
     private Integer idPedido;
@@ -46,7 +44,7 @@ public class Pedido implements Serializable {
     @Column(name = "horario_entrega")
     private String horarioEntrega;
     @Column(name = "enterga_vem_buscar")
-    private boolean entergaVemBuscar;
+    private Boolean entergaVemBuscar;
     @Column(name = "endereco_entrega")
     private String enderecoEntrega;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -94,11 +92,11 @@ public class Pedido implements Serializable {
         this.horarioEntrega = horarioEntrega;
     }
 
-    public boolean getEntergaVemBuscar() {
+    public Boolean getEntergaVemBuscar() {
         return entergaVemBuscar;
     }
 
-    public void setEntergaVemBuscar(boolean entergaVemBuscar) {
+    public void setEntergaVemBuscar(Boolean entergaVemBuscar) {
         this.entergaVemBuscar = entergaVemBuscar;
     }
 
@@ -174,5 +172,5 @@ public class Pedido implements Serializable {
     public String toString() {
         return "Entidades.Pedido[ idPedido=" + idPedido + " ]";
     }
-    
+
 }

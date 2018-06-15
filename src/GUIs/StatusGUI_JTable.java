@@ -28,6 +28,7 @@ import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.AbstractCellEditor;
 import javax.swing.DefaultCellEditor;
+import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -43,9 +44,11 @@ import javax.swing.table.TableColumn;
 public class StatusGUI_JTable extends JDialog {
 
     private final Container cp;
+    ImageIcon iconeCreate = new ImageIcon(getClass().getResource("/icones/create.png"));
+     ImageIcon iconeDelete = new ImageIcon(getClass().getResource("/icones/delete.png"));
     private final JPanel painelAvisos = new JPanel(new GridLayout(1,3));
-    private final JButton btnAdd = new JButton("Adicionar");
-    private final JButton btnRem = new JButton("Remover");
+    private final JButton btnAdd = new JButton(iconeCreate);
+    private final JButton btnRem = new JButton(iconeDelete);
     private final JButton btnCarregar = new JButton("Carregar dados");
 
     private JTable table = new JTable();
@@ -57,7 +60,7 @@ public class StatusGUI_JTable extends JDialog {
 
         setTitle("CRUD Status");
         setLayout(new FlowLayout());
-        setSize(600, 500);
+        setSize(600, 300);
 
         cp = getContentPane();
         cp.setLayout(new BorderLayout());

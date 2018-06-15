@@ -11,7 +11,7 @@ private List<Funcionario> lista = new ArrayList<>();    public DAOFuncionario(){
     }
 
     public int autoIdFuncionario() {
-        Integer a = (Integer) em.createQuery("SELECT MAX(e.idFuncionario) FROM Funcionario) e ").getSingleResult();
+        Integer a = (Integer) em.createQuery("SELECT MAX(e.idFuncionario) FROM Funcionario e ").getSingleResult();
         if (a != null) {
             return a + 1;
         } else {

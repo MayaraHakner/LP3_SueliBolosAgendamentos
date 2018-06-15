@@ -5,6 +5,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.util.List;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
@@ -25,7 +26,7 @@ public class GUIClienteListagem extends JDialog {
 
     public GUIClienteListagem(List<Cliente> texto, int posX, int posY, Dimension dimensao) {
         setTitle("Listagem de Cliente");
-        setSize(dimensao);//tamanho da janela
+        setSize(700,300);//tamanho da janela
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);//libera ao sair (tira da memÃ³ria a classe
         setLayout(new BorderLayout());//informa qual gerenciador de layout serÃ¡ usado
         setBackground(Color.CYAN);//cor do fundo da janela
@@ -54,6 +55,10 @@ public class GUIClienteListagem extends JDialog {
         cp.add(scroll, BorderLayout.CENTER);
 
         setLocation(posX + 20, posY + 20);
-        setVisible(true);//faz a janela ficar visÃ­vel        
+        setVisible(true);//faz a janela ficar visÃ­vel     
+        
+    }
+    public static void main(String[] args) {
+        new ClienteGUI(new Point(880, 250), new Dimension(800, 600));
     }
 }

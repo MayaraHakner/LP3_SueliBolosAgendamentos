@@ -1,5 +1,6 @@
 package GUIs;
 
+import Entidades.Funcionario;
 import Entidades.Pedido;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -19,13 +20,15 @@ import java.text.DecimalFormat;
 public class GUIPedidoListagem extends JDialog {
 
     JPanel painelTa = new JPanel();
-    JScrollPane scroll = new JScrollPane(); SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    JScrollPane scroll = new JScrollPane();
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     DecimalFormat decimalFormat = new DecimalFormat("###,###,##0.00");
-
+    DAOs.DAOFuncionario daoFuncionario = new DAOs.DAOFuncionario();
+    Funcionario funcionario = new Funcionario();
 
     public GUIPedidoListagem(List<Pedido> texto, int posX, int posY, Dimension dimensao) {
         setTitle("Listagem de Pedido");
-        setSize(dimensao);//tamanho da janela
+        setSize(700,300);//tamanho da janela
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);//libera ao sair (tira da memÃ³ria a classe
         setLayout(new BorderLayout());//informa qual gerenciador de layout serÃ¡ usado
         setBackground(Color.CYAN);//cor do fundo da janela
@@ -34,21 +37,19 @@ public class GUIPedidoListagem extends JDialog {
 
         JToolBar toolBar = new JToolBar();
 
-
-String[] colunas = new String[]{ "id","data","horario","entregaVemBuscar","enderecoEntrega","desconto","observacao","codigoCliente","idFuncionario"};
-String[][] dados = new String[0][9];
+        String[] colunas = new String[]{"Id", "Data", "Horario", "Vem Buscar", "Endereço Entrega", "Desconto", "Observação", "Codigo Cliente", "Id Funcionario"};
+        String[][] dados = new String[0][9];
         DefaultTableModel model = new DefaultTableModel(dados, colunas);
         JTable tabela = new JTable(model);
-
+        
         scroll.setViewportView(tabela);
 
         for (int i = 0; i < texto.size(); i++) {
 
-String[] linha = new String[]{String.valueOf(texto.get(i).getIdPedido()),sdf.format(texto.get(i).getDataPedido()),String.valueOf(texto.get(i).getHorarioEntrega()),String.valueOf(texto.get(i).getEntergaVemBuscar()),String.valueOf(texto.get(i).getEnderecoEntrega()),String.valueOf((texto.get(i).getDescontoPedido())),String.valueOf(texto.get(i).getObservacaoPedido()),String.valueOf(texto.get(i).getClienteCodigoCliente()),String.valueOf(texto.get(i).getFuncionarioIdFuncionario()),};
+            String[] linha = new String[]{String.valueOf(texto.get(i).getIdPedido()), sdf.format(texto.get(i).getDataPedido()), String.valueOf(texto.get(i).getHorarioEntrega()), String.valueOf(texto.get(i).getEntergaVemBuscar()), String.valueOf(texto.get(i).getEnderecoEntrega()), String.valueOf((texto.get(i).getDescontoPedido())), String.valueOf(texto.get(i).getObservacaoPedido()), String.valueOf(texto.get(i).getClienteCodigoCliente().getNomeCliente()), String.valueOf(texto.get(i).getFuncionarioIdFuncionario().getNomeFuncionario()),};
             model.addRow(linha);
         }
-
-
+        tabela.setEnabled(false);
         // scroll.add(ta);
         painelTa.add(scroll);
 

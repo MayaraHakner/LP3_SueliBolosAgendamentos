@@ -160,7 +160,7 @@ public class GUIMenu extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                new ClienteGUI(new Point(880, 250), new Dimension(500, 400));
+                new ClienteGUI(new Point(880, 250), new Dimension(600, 400));
             }
         });
         itemFuncionario.addActionListener(new ActionListener() {

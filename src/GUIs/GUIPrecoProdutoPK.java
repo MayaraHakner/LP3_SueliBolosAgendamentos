@@ -2,6 +2,7 @@ package GUIs;
 
 import DAOs.*;
 import Entidades.*;
+import Ferramentas.FerramentasParaData;
 import java.awt.Dimension;
 import java.util.List;
 import java.awt.Point;
@@ -11,6 +12,8 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JFormattedTextField;
+import javax.swing.text.MaskFormatter;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.WindowAdapter;
@@ -26,6 +29,7 @@ import javax.swing.WindowConstants;
 import myUtil.JanelaPesquisar;
 import java.text.SimpleDateFormat;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.Date;
 
 import myUtil.UsarGridBagLayout;
@@ -59,10 +63,15 @@ public class GUIPrecoProdutoPK extends JDialog {
 
     String acao = "";//variavel para facilitar insert e update
     DAOPrecoProdutoPK daoPrecoProdutoPK = new DAOPrecoProdutoPK();
+    DAOProduto daoProduto = new DAOProduto();
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    MaskFormatter mascara;
     DecimalFormat decimalFormat = new DecimalFormat("###,###,##0.00");
     PrecoProduto precoProduto;
     DAOPrecoProduto daoPrecoProduto = new DAOPrecoProduto();
+    FerramentasParaData ferramentasParaData = new FerramentasParaData();
+    Date dataDatanasc;
+    SimpleDateFormat sdfDatanasc = new SimpleDateFormat("dd/MM/yyyy");
 
     private void atvBotoes(boolean c, boolean r, boolean u, boolean d) {
         btnCreate.setEnabled(c);
@@ -100,9 +109,16 @@ public class GUIPrecoProdutoPK extends JDialog {
     Color corPadrao = labelProdutoIdProduto.getBackground();
 
     public GUIPrecoProdutoPK(Point posicao, Dimension dimensao) {
+        try {
+            mascara = new MaskFormatter("##/##/####");
+        } catch (ParseException erro) {
+
+        }
+        textFieldDataPrecoProduto = new JFormattedTextField(mascara);
+
         dimensao.height = 150;
         setTitle("CRUD - PrecoProdutoPK");
-        setSize(dimensao);//tamanho da janela
+        setSize(700, 150);//tamanho da janela
         setLayout(new BorderLayout());//informa qual gerenciador de layout será usado
         setBackground(Color.CYAN);//cor do fundo da janela
         Container cp = getContentPane();//container principal, para adicionar nele os outros componentes
@@ -157,7 +173,27 @@ public class GUIPrecoProdutoPK extends JDialog {
         textFieldProdutoIdProduto.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                btnRetrieve.doClick();
+                if (textFieldProdutoIdProduto.getText().equals("")) {
+                    // DAOProduto daoProduto = new DAOProduto();
+                    List<String> listaAuxiliar = daoProduto.listInOrderNomeStrings("id");
+                    if (listaAuxiliar.size() > 0) {
+                        Point lc = btnRetrieve.getLocationOnScreen();
+                        lc.x = lc.x + btnRetrieve.getWidth();
+                        String selectedItem = new JanelaPesquisar(listaAuxiliar,
+                                lc.x,
+                                lc.y).getValorRetornado();
+                        if (!selectedItem.equals("")) {
+                            String[] aux = selectedItem.split("-");
+                            textFieldProdutoIdProduto.setText(aux[0]);
+                        } else {
+                            textFieldProdutoIdProduto.requestFocus();
+                            textFieldProdutoIdProduto.selectAll();
+                        }
+                    }
+
+                    textFieldProdutoIdProduto.requestFocus();
+                    textFieldProdutoIdProduto.selectAll();
+                }
             }
         });
 
@@ -168,6 +204,18 @@ public class GUIPrecoProdutoPK extends JDialog {
                 precoProduto = new PrecoProduto();
                 textFieldProdutoIdProduto.setText(textFieldProdutoIdProduto.getText().trim());//caso tenham sido digitados espaços
                 DAOPrecoProduto daoPrecoProduto1 = new DAOPrecoProduto();
+
+                try {
+                    sdf.setLenient(false);
+
+                    Date dtPreco = sdf.parse(textFieldDataPrecoProduto.getText());
+                    
+
+                } catch (Exception errroooo1) {
+
+                    //textFieldProdutoIdProduto.setBackground(Color.red);
+                    textFieldDataPrecoProduto.setBackground(Color.red);
+                }
                 if (textFieldProdutoIdProduto.getText().equals("")) {
                     // DAOProduto daoProduto = new DAOProduto();
                     List<String> listaAuxiliar = daoPrecoProduto.listInOrderNomeStrings("id");
@@ -194,7 +242,19 @@ public class GUIPrecoProdutoPK extends JDialog {
                     try {
                         PrecoProdutoPK precoProdutoPK = new PrecoProdutoPK();
                         precoProdutoPK.setProdutoIdProduto(Integer.valueOf(textFieldProdutoIdProduto.getText()));
-                        precoProdutoPK.setDataPrecoProduto(sdf.parse(textFieldDataPrecoProduto.getText()));
+
+                        precoProdutoPK.setDataPrecoProduto(sdf.parse((textFieldDataPrecoProduto.getText())));
+                        try {
+                            sdf.setLenient(false);
+                            int idProd = Integer.valueOf(textFieldProdutoIdProduto.getText());
+                            Date dtPreco = sdf.parse(textFieldDataPrecoProduto.getText());
+                            precoProduto.setPrecoProdutoPK(new PrecoProdutoPK(dtPreco, idProd));
+
+                        } catch (Exception errroooo) {
+
+                            //textFieldProdutoIdProduto.setBackground(Color.red);
+                            textFieldDataPrecoProduto.setBackground(Color.red);
+                        }
                         DAOPrecoProduto daoPrecoProduto = new DAOPrecoProduto();
                         precoProduto = daoPrecoProduto.obter(precoProdutoPK);
 
@@ -234,6 +294,19 @@ public class GUIPrecoProdutoPK extends JDialog {
                 acao = "insert";
             }
         });
+        btnCancel.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                zerarAtributos();
+                atvBotoes(false, true, false, false);
+                mostrarBotoes(true);
+                textFieldPrecoProduto.setEditable(false);
+                habilitarAtributos(true, false);
+                textFieldDataPrecoProduto.setBackground(corPadrao);
+            
+                textFieldProdutoIdProduto.setBackground(corPadrao);
+                }
+        });
 
 //-----------------------------  SAVE ------------------------------------------
         btnSave.addActionListener(new ActionListener() {
@@ -247,7 +320,7 @@ public class GUIPrecoProdutoPK extends JDialog {
                     sdf.setLenient(false);
                     int idProd = Integer.valueOf(textFieldProdutoIdProduto.getText());
                     Date dtPreco = sdf.parse(textFieldDataPrecoProduto.getText());
-                    precoProduto.setPrecoProdutoPK(new PrecoProdutoPK(dtPreco,idProd));
+                    precoProduto.setPrecoProdutoPK(new PrecoProdutoPK(dtPreco, idProd));
 
                 } catch (Exception erro2) {
                     deuRuim = true;
@@ -255,9 +328,12 @@ public class GUIPrecoProdutoPK extends JDialog {
                     textFieldDataPrecoProduto.setBackground(Color.red);
                 }
                 try {
-                    precoProduto.setPreco(Double.valueOf(textFieldPrecoProduto.getText()));
+                    precoProduto.setPreco(Double.valueOf((textFieldPrecoProduto.getText())));
+                    textFieldPrecoProduto.setBackground(corPadrao);
+
                 } catch (Exception erro3) {
                     textFieldPrecoProduto.setBackground(Color.red);
+                    deuRuim = true;
                 }
                 if (!deuRuim) {
                     if (acao.equals("insert")) {
@@ -277,22 +353,6 @@ public class GUIPrecoProdutoPK extends JDialog {
                 }
             }
         });
-        btnCancel.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                zerarAtributos();
-                atvBotoes(false, true, false, false);
-                habilitarAtributos(true, false);
-                mostrarBotoes(true);
-            }
-        });
-        btnList.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                acao = "list";
-                GUIPrecoProdutoPKListagem guiPrecoProdutoPKListagem = new GUIPrecoProdutoPKListagem(daoPrecoProduto.listInOrderNome(), getBounds().x, getBounds().y, dimensao);
-            }
-        });
         btnUpdate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -309,16 +369,28 @@ public class GUIPrecoProdutoPK extends JDialog {
                         + precoProduto.getProduto().getNomeProduto() + "\n"
                         + sdf.format(precoProduto.getPrecoProdutoPK().getDataPrecoProduto()) + "\n"
                         + "R$" + precoProduto.getPreco() + "\n",
-                         "Confirm",
+                        "Confirm",
                         JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)) {
                     labelAviso.setText("Registro excluído...");
-//                    daDoPrecoProdutoPK.remover(produto);
+                    daoPrecoProduto.remover(precoProduto);
                     zerarAtributos();
                     mostrarBotoes(true);
                     atvBotoes(false, true, false, false);
                     textFieldDataPrecoProduto.requestFocus();
                     textFieldDataPrecoProduto.selectAll();
+                    textFieldProdutoIdProduto.setBackground(corPadrao);
+                    textFieldDataPrecoProduto.setBackground(corPadrao);
+                    textFieldDataPrecoProduto.setText("");
+                    textFieldProdutoIdProduto.setText("");
+                   
                 }
+            }
+        });
+        btnList.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+
+                GUIPrecoProdutoPKListagem guiPrecoProdutoPKListagem = new GUIPrecoProdutoPKListagem(daoPrecoProduto.listInOrderId(), getBounds().x, getBounds().y, new Dimension(800, 600));
             }
         });
         textFieldDataPrecoProduto.addFocusListener(new FocusListener() { //ao receber o foco, fica verde

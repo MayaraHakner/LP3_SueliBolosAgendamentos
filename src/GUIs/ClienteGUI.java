@@ -110,7 +110,7 @@ public class ClienteGUI extends JFrame {
 
     public ClienteGUI(Point posicao, Dimension dimensao) {
         Cliente n;
-        setSize(1000, 400);
+        setSize(600, 300);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setTitle("CRUD - Cliente - GUI");
         atvBotoes(false, true, false, false);
@@ -205,7 +205,7 @@ public class ClienteGUI extends JFrame {
                             textFieldObservacao.setText(String.valueOf(cliente.getObservacaoCliente()));
                             atvBotoes(false, true, true, true);
 
-                            habilitarAtributos(true, false, false, false);
+                            habilitarAtributos(false, false, false, false);
                             labelAviso.setText("Encontrou - clic [Pesquisar], [Alterar] ou [Excluir]");
                             qualAcao = "encontrou";
                         } else {

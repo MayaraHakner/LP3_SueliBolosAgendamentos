@@ -11,7 +11,7 @@ private List<Produto> lista = new ArrayList<>();    public DAOProduto(){
     }
 
     public int autoIdProduto() {
-        Integer a = (Integer) em.createQuery("SELECT MAX(e.idProduto) FROM Produto) e ").getSingleResult();
+        Integer a = (Integer) em.createQuery("SELECT MAX(e.idProduto) FROM Produto e ").getSingleResult();
         if (a != null) {
             return a + 1;
         } else {

@@ -25,7 +25,7 @@ public class GUIStatusListagem extends JDialog {
 
     public GUIStatusListagem(List<Status> texto, int posX, int posY, Dimension dimensao) {
         setTitle("Listagem de Status");
-        setSize(dimensao);//tamanho da janela
+        setSize(500,300);//tamanho da janela
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);//libera ao sair (tira da memÃ³ria a classe
         setLayout(new BorderLayout());//informa qual gerenciador de layout serÃ¡ usado
         setBackground(Color.CYAN);//cor do fundo da janela
@@ -38,7 +38,7 @@ public class GUIStatusListagem extends JDialog {
         String[][] dados = new String[0][2];
         DefaultTableModel model = new DefaultTableModel(dados, colunas);
         JTable tabela = new JTable(model);
-
+        tabela.setEnabled(false);
         scroll.setViewportView(tabela);
 
         for (int i = 0; i < texto.size(); i++) {

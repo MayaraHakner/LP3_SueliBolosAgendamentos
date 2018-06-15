@@ -7,16 +7,17 @@ package Entidades;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -33,7 +34,6 @@ public class Funcionario implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id_funcionario")
     private Integer idFuncionario;
@@ -49,6 +49,8 @@ public class Funcionario implements Serializable {
     private String endereçoFuncionario;
     @Column(name = "foto_funcionario")
     private String fotoFuncionario;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "funcionarioIdFuncionario")
+    private List<Pedido> pedidoList;
     @JoinColumn(name = "status_id_status", referencedColumnName = "id_status")
     @ManyToOne(optional = false)
     private Status statusIdStatus;
@@ -111,6 +113,14 @@ public class Funcionario implements Serializable {
 
     public void setFotoFuncionario(String fotoFuncionario) {
         this.fotoFuncionario = fotoFuncionario;
+    }
+
+    public List<Pedido> getPedidoList() {
+        return pedidoList;
+    }
+
+    public void setPedidoList(List<Pedido> pedidoList) {
+        this.pedidoList = pedidoList;
     }
 
     public Status getStatusIdStatus() {

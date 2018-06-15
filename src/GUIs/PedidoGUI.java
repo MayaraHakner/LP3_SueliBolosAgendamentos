@@ -19,6 +19,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -29,7 +30,10 @@ import Main.CaixaDeFerramentas;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import javax.swing.JCheckBox;
+import javax.swing.JFormattedTextField;
+import javax.swing.text.MaskFormatter;
 
 /**
  *
@@ -45,6 +49,9 @@ public class PedidoGUI extends JFrame {
     ImageIcon iconeSave = new ImageIcon(getClass().getResource("/icones/save.png"));
     ImageIcon iconeCancel = new ImageIcon(getClass().getResource("/icones/cancel.png"));
     ImageIcon iconeListar = new ImageIcon(getClass().getResource("/icones/list.png"));
+    ImageIcon iconeRetrieveCliente = new ImageIcon(getClass().getResource("/icones/retrieve.png"));
+    ImageIcon iconeRetrieveFuncionario = new ImageIcon(getClass().getResource("/icones/retrieve.png"));
+    
     JButton btnCreate = new JButton(iconeCreate);
     JButton btnRetrieve = new JButton(iconeRetrieve);
     JButton btnUpdate = new JButton(iconeUpdate);
@@ -52,6 +59,9 @@ public class PedidoGUI extends JFrame {
     JButton btnSave = new JButton(iconeSave);
     JButton btnCancel = new JButton(iconeCancel);
     JButton btnList = new JButton(iconeListar);
+    JButton btnRetrieveCliente = new JButton(iconeRetrieveCliente);
+    JButton btnRetrieveFuncionario = new JButton(iconeRetrieveFuncionario);
+    
     private JLabel labelId = new JLabel("Id");
     private JLabel labelData = new JLabel("Data");
     private JLabel labelHorario = new JLabel("Horário");
@@ -73,6 +83,8 @@ public class PedidoGUI extends JFrame {
     JPanel pnAvisos = new JPanel();
     JLabel labelAviso = new JLabel("");
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat();
+
+    CaixaDeFerramentas ferramenta = new CaixaDeFerramentas();
 
     private void atvBotoes(boolean c, boolean r, boolean u, boolean d) {
         btnCreate.setEnabled(c);
@@ -123,10 +135,12 @@ public class PedidoGUI extends JFrame {
     Color corPadrao = labelId.getBackground();
     private JPanel pnNorte = new JPanel(new FlowLayout(FlowLayout.LEFT));
     private JPanel pnCentro = new JPanel(new GridLayout(8, 2));
+    private JPanel pnCentroCliente = new JPanel(new GridLayout(1,4));
+    private JPanel pnCentroFuncionario = new JPanel(new GridLayout(1,4));
     private JPanel pnSul = new JPanel(new GridLayout(1, 1));
     private ScrollPane scroll = new ScrollPane();
     private String qualAcao = "";
-    CaixaDeFerramentas ferramenta = new CaixaDeFerramentas();
+    //CaixaDeFerramentas ferramenta = new CaixaDeFerramentas();
     FerramentasParaData ferramentasParaData = new FerramentasParaData();
     Date dataData;
     SimpleDateFormat sdfData = new SimpleDateFormat("dd/MM/yyyy");
@@ -139,8 +153,15 @@ public class PedidoGUI extends JFrame {
     Funcionario funcionario = new Funcionario();
 
     public PedidoGUI(Point posicao, Dimension dimensao) {
+        btnRetrieveCliente.setEnabled(false);
+        btnRetrieveFuncionario.setEnabled(false);
+        try {
+            MaskFormatter mf = new MaskFormatter("##:##");
+            textFieldHorario = new JFormattedTextField(mf);
+        } catch (Exception e) {
+        }
         Pedido n;
-        setSize(1000, 400);
+        setSize(600, 400);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setTitle("CRUD - Pedido - GUI");
         atvBotoes(true, true, false, false);
@@ -176,9 +197,13 @@ public class PedidoGUI extends JFrame {
         pnCentro.add(labelObservacao);
         pnCentro.add(textFieldObservacao);
         pnCentro.add(labelCodigocliente);
-        pnCentro.add(textFieldCodigocliente);
+       pnCentroCliente.add(textFieldCodigocliente);
+        pnCentroCliente.add(btnRetrieveCliente);
+       pnCentro.add(pnCentroCliente);
         pnCentro.add(labelIdfuncionario);
-        pnCentro.add(textFieldIdfuncionario);
+        pnCentroFuncionario.add(textFieldIdfuncionario);
+        pnCentroFuncionario.add(btnRetrieveFuncionario);
+        pnCentro.add(pnCentroFuncionario);
         JToolBar Toolabelar1 = new JToolBar();
         Toolabelar1.add(labelId);
         Toolabelar1.add(textFieldId);
@@ -202,6 +227,7 @@ public class PedidoGUI extends JFrame {
 
         textFieldId.setText("");
         textFieldId.setEditable(false);
+
 //--------------- listeners ----------------- 
         textFieldId.addActionListener(new ActionListener() {
             @Override
@@ -247,10 +273,10 @@ public class PedidoGUI extends JFrame {
                             textFieldHorario.setText(String.valueOf(pedido.getHorarioEntrega()));
                             checkBoxEntregavembuscar.setSelected((pedido.getEntergaVemBuscar()));
                             textFieldEnderecoentrega.setText(String.valueOf(pedido.getEnderecoEntrega()));
-                            textFieldDesconto.setText(decimalFormat.format(pedido.getDescontoPedido()));
+                            textFieldDesconto.setText(String.valueOf(pedido.getDescontoPedido()));
                             textFieldObservacao.setText(String.valueOf(pedido.getObservacaoPedido()));
-                            textFieldCodigocliente.setText(String.valueOf(pedido.getClienteCodigoCliente().getCodigoCliente()+ "-" + pedido.getClienteCodigoCliente().getNomeCliente()));
-                            textFieldIdfuncionario.setText(String.valueOf(pedido.getFuncionarioIdFuncionario().getIdFuncionario()+ "-" + pedido.getFuncionarioIdFuncionario().getNomeFuncionario()));
+                            textFieldCodigocliente.setText(String.valueOf(pedido.getClienteCodigoCliente().getCodigoCliente() + "-" + pedido.getClienteCodigoCliente().getNomeCliente()));
+                            textFieldIdfuncionario.setText(String.valueOf(pedido.getFuncionarioIdFuncionario().getIdFuncionario() + "-" + pedido.getFuncionarioIdFuncionario().getNomeFuncionario()));
                             //textFieldIdfuncionario.setText(String.valueOf(pedido.getFuncionarioIdFuncionario()));
                             atvBotoes(true, true, true, true);
 
@@ -273,15 +299,19 @@ public class PedidoGUI extends JFrame {
                 }
                 textFieldId.setText("");
                 textFieldId.setEditable(false);
+                btnRetrieveCliente.setEnabled(false);
+                btnRetrieveFuncionario.setEnabled(false);
             }
         });
         btnCreate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
+                btnRetrieveCliente.setEnabled(true);
+                btnRetrieveFuncionario.setEnabled(true);
                 zerarAtributos();
                 textFieldId.setText("");
                 textFieldId.setEditable(false);
-                habilitarAtributos(false, true, true, true, true, true, true, true, true);
+                habilitarAtributos(false, true, true, true, true, true, true, false, false);
                 textFieldData.requestFocus();
                 mostrarBotoes(false);
                 labelAviso.setText("Preencha os campos e clic [Salvar] ou clic [Cancelar]");
@@ -291,17 +321,11 @@ public class PedidoGUI extends JFrame {
         btnSave.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
+                btnRetrieveCliente.setEnabled(false);
+                btnRetrieveFuncionario.setEnabled(false);
                 boolean deuRuim = false;
                 if (qualAcao.equals("insert")) {
                     pedido = new Pedido();
-                }
-                try {
-                    pedido.setIdPedido(daoPedido.autoIdPedido());
-                    System.out.println("foi");
-                } catch (Exception erro2) {
-                    
-                    textFieldId.setBackground(Color.red);
-                    System.out.println("não foi");
                 }
 
                 try {
@@ -315,24 +339,24 @@ public class PedidoGUI extends JFrame {
                     pedido.setHorarioEntrega(String.valueOf((textFieldHorario.getText())));
                 } catch (Exception erro2) {
                     deuRuim = true;
-                    System.out.println("2");
+                    //System.out.println("2");
                     textFieldId.setBackground(Color.red);
                 }
                 try {
                     pedido.setEntergaVemBuscar((checkBoxEntregavembuscar.isSelected()));
                 } catch (Exception erro2) {
                     deuRuim = true;
-                    System.out.println("3");
+                    //System.out.println("3");
                 }
                 try {
                     pedido.setEnderecoEntrega(String.valueOf((textFieldEnderecoentrega.getText())));
                 } catch (Exception erro2) {
                     deuRuim = true;
                     textFieldId.setBackground(Color.red);
-                    System.out.println("4");
+                    //System.out.println("4");
                 }
                 try {
-                    pedido.setDescontoPedido(Double.valueOf(decimalFormat.format(textFieldDesconto.getText())));
+                    pedido.setDescontoPedido(Double.valueOf((textFieldDesconto.getText())));
                 } catch (Exception erro2) {
                     deuRuim = true;
                     System.out.println("5");
@@ -362,6 +386,14 @@ public class PedidoGUI extends JFrame {
                 }
                 if (!deuRuim) {
                     if (qualAcao.equals("insert")) {
+                        try {
+                            pedido.setIdPedido(daoPedido.autoIdPedido());
+                            System.out.println("foi");
+                        } catch (Exception erro2) {
+
+                            textFieldId.setBackground(Color.red);
+                            System.out.println("não foi");
+                        }
                         daoPedido.inserir(pedido);
                         labelAviso.setText("Registro inserido.");
                     } else {
@@ -371,7 +403,7 @@ public class PedidoGUI extends JFrame {
 
                     habilitarAtributos(true, false, false, false, false, false, false, false, false);
                     mostrarBotoes(true);
-                    atvBotoes(false, true, false, false);
+                    atvBotoes(true, true, false, false);
                 }//!deu ruim
                 else {
                     labelAviso.setText("Erro nos dados - corrija");
@@ -386,18 +418,22 @@ public class PedidoGUI extends JFrame {
         btnUpdate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
+                btnRetrieveCliente.setEnabled(true);
+                btnRetrieveFuncionario.setEnabled(true);
                 qualAcao = "update";
                 mostrarBotoes(false);
                 textFieldId.setText("");
                 textFieldId.setEditable(false);
-                habilitarAtributos(false, true, true, true, true, true, true, true, true);
+                habilitarAtributos(false, true, true, true, true, true, true, false, false);
             }
         });
         btnCancel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
+                btnRetrieveCliente.setEnabled(false);
+                btnRetrieveFuncionario.setEnabled(false);
                 zerarAtributos();
-                atvBotoes(false, true, false, false);
+                atvBotoes(true, true, false, false);
                 mostrarBotoes(true);
                 textFieldId.setText("");
                 textFieldId.setEditable(false);
@@ -414,16 +450,18 @@ public class PedidoGUI extends JFrame {
                     daoPedido.remover(pedido);
                     zerarAtributos();
                     mostrarBotoes(true);
-                    atvBotoes(false, true, false, false);
+                    atvBotoes(true, true, false, false);
                     textFieldData.requestFocus();
                     textFieldData.selectAll();
                     textFieldId.setText("");
                     textFieldId.setEditable(false);
+                    btnRetrieveCliente.setEnabled(false);
+                btnRetrieveFuncionario.setEnabled(false);
                 }
             }
         });
         // ----------------   Janela Pesquisar para FKs -----------------
-        textFieldCodigocliente.addActionListener(new ActionListener() {
+        btnRetrieveCliente.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e
             ) {
@@ -447,7 +485,7 @@ public class PedidoGUI extends JFrame {
                 }
             }
         });
-        textFieldIdfuncionario.addActionListener(new ActionListener() {
+        btnRetrieveFuncionario.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e
             ) {

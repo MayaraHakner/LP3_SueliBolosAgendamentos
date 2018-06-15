@@ -19,38 +19,36 @@ import java.text.DecimalFormat;
 public class GUIFuncionarioListagem extends JDialog {
 
     JPanel painelTa = new JPanel();
-    JScrollPane scroll = new JScrollPane(); SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    JScrollPane scroll = new JScrollPane();
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     DecimalFormat decimalFormat = new DecimalFormat("###,###,##0.00");
-
+    DAOs.DAOStatus daoStatus = new DAOs.DAOStatus();
 
     public GUIFuncionarioListagem(List<Funcionario> texto, int posX, int posY, Dimension dimensao) {
         setTitle("Listagem de Funcionario");
-        setSize(dimensao);//tamanho da janela
+        setSize(700, 300);//tamanho da janela
+
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);//libera ao sair (tira da memÃ³ria a classe
         setLayout(new BorderLayout());//informa qual gerenciador de layout serÃ¡ usado
         setBackground(Color.CYAN);//cor do fundo da janela
         setModal(true);
         Container cp = getContentPane();//container principal, para adicionar nele os outros componentes
-
         JToolBar toolBar = new JToolBar();
 
-
-String[] colunas = new String[]{ "id","nome","dataNasc","telefone","endereco","status"};
-String[][] dados = new String[0][6];
+        String[] colunas = new String[]{"id", "nome", "dataNasc", "telefone", "endereco", "status"};
+        String[][] dados = new String[0][6];
         DefaultTableModel model = new DefaultTableModel(dados, colunas);
         JTable tabela = new JTable(model);
-
+        tabela.setEnabled(false);
         scroll.setViewportView(tabela);
 
         for (int i = 0; i < texto.size(); i++) {
 
-String[] linha = new String[]{String.valueOf(texto.get(i).getIdFuncionario()),String.valueOf(texto.get(i).getNomeFuncionario()),String.valueOf(sdf.format(texto.get(i).getDataNascFuncionario())),String.valueOf(texto.get(i).getTelefoneFuncionario()),String.valueOf(texto.get(i).getEndereçoFuncionario()),String.valueOf(texto.get(i).getStatusIdStatus()),};
+            String[] linha = new String[]{String.valueOf(texto.get(i).getIdFuncionario()), String.valueOf(texto.get(i).getNomeFuncionario()), String.valueOf(sdf.format(texto.get(i).getDataNascFuncionario())), String.valueOf(texto.get(i).getTelefoneFuncionario()), String.valueOf(texto.get(i).getEndereçoFuncionario()), String.valueOf(texto.get(i).getStatusIdStatus().getNomeStatus()),};
             model.addRow(linha);
         }
 
-
         // scroll.add(ta);
-        
         painelTa.add(scroll);
 
         cp.add(toolBar, BorderLayout.NORTH);

@@ -27,7 +27,10 @@ import javax.swing.JToolBar;
 import Main.CaixaDeFerramentas;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.text.ParseException;
 import javax.swing.JCheckBox;
+import javax.swing.JFormattedTextField;
+import javax.swing.text.MaskFormatter;
 
 /**
  *
@@ -43,6 +46,8 @@ public class ProdutoGUI extends JFrame {
     ImageIcon iconeSave = new ImageIcon(getClass().getResource("/icones/save.png"));
     ImageIcon iconeCancel = new ImageIcon(getClass().getResource("/icones/cancel.png"));
     ImageIcon iconeListar = new ImageIcon(getClass().getResource("/icones/list.png"));
+    ImageIcon iconeRetrieveSabor = new ImageIcon(getClass().getResource("/icones/retrieve.png"));
+    ImageIcon iconeRetrieveUnidade = new ImageIcon(getClass().getResource("/icones/retrieve.png"));
     JButton btnCreate = new JButton(iconeCreate);
     JButton btnRetrieve = new JButton(iconeRetrieve);
     JButton btnUpdate = new JButton(iconeUpdate);
@@ -50,19 +55,23 @@ public class ProdutoGUI extends JFrame {
     JButton btnSave = new JButton(iconeSave);
     JButton btnCancel = new JButton(iconeCancel);
     JButton btnList = new JButton(iconeListar);
+    JButton btnRetrieveSabor = new JButton(iconeRetrieveSabor);
+    JButton btnRetrieveUnidade = new JButton(iconeRetrieveUnidade);
     private JLabel labelId = new JLabel("Id");
     private JLabel labelNome = new JLabel("Nome");
     private JLabel labelStatus = new JLabel("Status");
-    private JLabel labelUnmedida = new JLabel("Unmedida");
+    private JLabel labelUnmedida = new JLabel("Unidade Medida");
     private JLabel labelSabor = new JLabel("Sabor");
     private JTextField textFieldId = new JTextField(15);
     private JTextField textFieldNome = new JTextField(15);
-    JCheckBox checkBoxStatus = new JCheckBox("Status");
+    JCheckBox checkBoxStatus = new JCheckBox("Inativo");
     private JTextField textFieldUnmedida = new JTextField(15);
     private JTextField textFieldSabor = new JTextField(15);
     JPanel pnAvisos = new JPanel();
     JLabel labelAviso = new JLabel("");
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat();
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+    DAOSabor daoSabor1 = new DAOSabor();
+    DAOUnMedida daoUnMedida1 = new DAOUnMedida();
 
     private void atvBotoes(boolean c, boolean r, boolean u, boolean d) {
         btnCreate.setEnabled(c);
@@ -105,6 +114,8 @@ public class ProdutoGUI extends JFrame {
     Color corPadrao = labelId.getBackground();
     private JPanel pnNorte = new JPanel(new FlowLayout(FlowLayout.LEFT));
     private JPanel pnCentro = new JPanel(new GridLayout(4, 2));
+    private JPanel pnCentroSabor = new JPanel(new GridLayout(1, 4));
+    private JPanel pnCentroUnidade = new JPanel(new GridLayout(1, 4));
     private JPanel pnSul = new JPanel(new GridLayout(1, 1));
     private ScrollPane scroll = new ScrollPane();
     private String qualAcao = "";
@@ -116,13 +127,17 @@ public class ProdutoGUI extends JFrame {
     DAOUnMedida daoUnMedida = new DAOUnMedida();
     Sabor sabor = new Sabor();
     UnMedida unMedida = new UnMedida();
+    MaskFormatter mascara;
+    JFormattedTextField mascaraHorario;
 
     public ProdutoGUI(Point posicao, Dimension dimensao) {
+        btnRetrieveSabor.setEnabled(false);
+        btnRetrieveUnidade.setEnabled(false);
         Produto n;
-        setSize(1000, 400);
+        setSize(600, 350);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setTitle("CRUD - Produto - GUI");
-        atvBotoes(false, true, false, false);
+        atvBotoes(true, true, false, false);
         habilitarAtributos(true, false, false, false, false);
         btnCreate.setToolTipText("Inserir novo registro");
         btnRetrieve.setToolTipText("Pesquisar por chave");
@@ -147,9 +162,13 @@ public class ProdutoGUI extends JFrame {
         pnCentro.add(labelStatus);
         pnCentro.add(checkBoxStatus);
         pnCentro.add(labelUnmedida);
-        pnCentro.add(textFieldUnmedida);
+        pnCentroUnidade.add(textFieldUnmedida);
+        pnCentroUnidade.add(btnRetrieveUnidade);
+        pnCentro.add(pnCentroUnidade);
         pnCentro.add(labelSabor);
-        pnCentro.add(textFieldSabor);
+        pnCentroSabor.add(textFieldSabor);
+        pnCentroSabor.add(btnRetrieveSabor);
+        pnCentro.add(pnCentroSabor);
         JToolBar Toolabelar1 = new JToolBar();
         Toolabelar1.add(labelId);
         Toolabelar1.add(textFieldId);
@@ -170,6 +189,13 @@ public class ProdutoGUI extends JFrame {
         textFieldId.setEditable(true);
         setLocationRelativeTo(null);
         setVisible(true);
+        try {
+            mascara = new MaskFormatter("##/##/####");
+        } catch (ParseException erro) {
+
+        }
+        mascaraHorario = new JFormattedTextField(mascara);
+        textFieldId.setEditable(false);
 //--------------- listeners ----------------- 
         textFieldId.addActionListener(new ActionListener() {
             @Override
@@ -177,7 +203,7 @@ public class ProdutoGUI extends JFrame {
                 btnRetrieve.doClick();
             }
         });
-        textFieldSabor.addActionListener(new ActionListener() {
+        btnRetrieveSabor.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e
             ) {
@@ -201,7 +227,7 @@ public class ProdutoGUI extends JFrame {
                 }
             }
         });
-        textFieldUnmedida.addActionListener(new ActionListener() {
+        btnRetrieveUnidade.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e
             ) {
@@ -214,7 +240,7 @@ public class ProdutoGUI extends JFrame {
                         textFieldUnmedida.setText(selectedItem);
 
                         //preparar para salvar
-                        unMedida = daoUnMedida.obter(Integer.valueOf(aux[0]));
+                        unMedida = daoUnMedida.obter(String.valueOf(aux[0]));
 
                     } else {
                         textFieldSabor.requestFocus();
@@ -261,10 +287,10 @@ public class ProdutoGUI extends JFrame {
 
                             textFieldId.setText(String.valueOf(produto.getIdProduto()));
                             textFieldNome.setText(String.valueOf(produto.getNomeProduto()));
-                            checkBoxStatus.setSelected(Boolean.valueOf(produto.getStatus()));
-                            textFieldUnmedida.setText(String.valueOf(produto.getUnMedidaIdUnMedida()));
-                            textFieldSabor.setText(String.valueOf(produto.getSaborIdSabor()));
-                            atvBotoes(false, true, true, true);
+                            checkBoxStatus.setSelected((produto.getStatus()));
+                            textFieldUnmedida.setText(String.valueOf(produto.getUnMedidaIdUnMedida().getIdUnMedida()));
+                            textFieldSabor.setText(String.valueOf(produto.getSaborIdSabor().getIdSabor()));
+                            atvBotoes(true, true, true, true);
 
                             habilitarAtributos(true, false, false, false, false);
                             labelAviso.setText("Encontrou - clic [Pesquisar], [Alterar] ou [Excluir]");
@@ -290,50 +316,56 @@ public class ProdutoGUI extends JFrame {
             public void actionPerformed(ActionEvent ae) {
                 zerarAtributos();
 
-                habilitarAtributos(false, true, true, true, true);
+                habilitarAtributos(false, true, true, false, false);
                 textFieldNome.requestFocus();
                 mostrarBotoes(false);
                 labelAviso.setText("Preencha os campos e clic [Salvar] ou clic [Cancelar]");
                 qualAcao = "insert";
+                textFieldId.setText("");
+                textFieldId.setEditable(false);
+                btnRetrieveSabor.setEnabled(true);
+                btnRetrieveUnidade.setEnabled(true);
+
             }
         });
         btnSave.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
+
+                btnRetrieveSabor.setEnabled(false);
+                btnRetrieveUnidade.setEnabled(false);
                 boolean deuRuim = false;
                 if (qualAcao.equals("insert")) {
                     produto = new Produto();
                 }
-                try {
-                    produto.setIdProduto(Integer.valueOf((textFieldId.getText())));
-                } catch (Exception erro2) {
-                    deuRuim = true;
-                    textFieldId.setBackground(Color.red);
-                }
+
                 produto.setNomeProduto(String.valueOf(textFieldNome.getText()));
-
                 try {
-                    produto.setIdProduto(Integer.valueOf((textFieldId.getText())));
+                    produto.setStatus(((checkBoxStatus.isSelected())));
                 } catch (Exception erro2) {
                     deuRuim = true;
-                    textFieldId.setBackground(Color.red);
                 }
                 try {
-                    produto.setNomeProduto(String.valueOf((textFieldNome.getText())));
-                } catch (Exception erro2) {
-                    deuRuim = true;
-                    textFieldId.setBackground(Color.red);
-                }
-                try {
-                    produto.setStatus(Boolean.valueOf((checkBoxStatus.isSelected())));
+                    produto.setSaborIdSabor(daoSabor.obter(Integer.valueOf(textFieldSabor.getText().split("-")[0])));
                 } catch (Exception erro2) {
                     deuRuim = true;
                 }
 
-                 produto.setSaborIdSabor(daoSabor.obter(Integer.valueOf(textFieldSabor.getText().split("-")[0])));
-                 produto.setUnMedidaIdUnMedida(daoUnMedida.obter(String.valueOf(textFieldUnmedida.getText().split("-")[0])));
+                try {
+                   produto.setUnMedidaIdUnMedida(daoUnMedida.obter(String.valueOf(textFieldUnmedida.getText().split("-")[0])));
+                } catch (Exception erro2) {
+                    deuRuim = true;
+                }
+                
                 if (!deuRuim) {
                     if (qualAcao.equals("insert")) {
+                        try {
+                            produto.setIdProduto(daoProduto.autoIdProduto());
+                            System.out.println("aqui");
+                        } catch (Exception erro2) {
+                            deuRuim = true;
+                            textFieldId.setBackground(Color.red);
+                        }
                         daoProduto.inserir(produto);
                         labelAviso.setText("Registro inserido.");
                     } else {
@@ -343,36 +375,54 @@ public class ProdutoGUI extends JFrame {
 
                     habilitarAtributos(true, false, false, false, false);
                     mostrarBotoes(true);
-                    atvBotoes(false, true, false, false);
+                    atvBotoes(true, true, false, false);
+                    btnRetrieveSabor.setEnabled(false);
+                    btnRetrieveUnidade.setEnabled(false);
                 }//!deu ruim
                 else {
                     labelAviso.setText("Erro nos dados - corrija");
                     labelAviso.setBackground(Color.red);
+                    habilitarAtributos(true, true, true, false, false);
+                    btnRetrieveSabor.setEnabled(true);
+                    btnRetrieveUnidade.setEnabled(true);
                 }
+                textFieldId.setText("");
+                textFieldId.setEditable(false);
             }
+
         });
         btnUpdate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 qualAcao = "update";
                 mostrarBotoes(false);
+                textFieldId.setText("");
+                textFieldId.setEditable(false);
 
-                habilitarAtributos(false, true, true, true, true);
+                habilitarAtributos(false, true, true, false, false);
+                btnRetrieveSabor.setEnabled(true);
+                btnRetrieveUnidade.setEnabled(true);
             }
         });
         btnCancel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 zerarAtributos();
-                atvBotoes(false, true, false, false);
+                atvBotoes(true, true, false, false);
                 mostrarBotoes(true);
+                textFieldId.setText("");
+                textFieldId.setEditable(false);
 
                 habilitarAtributos(true, false, false, false, false);
+                btnRetrieveSabor.setEnabled(false);
+                btnRetrieveUnidade.setEnabled(false);
             }
         });
         btnDelete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
+                btnRetrieveSabor.setEnabled(false);
+                btnRetrieveUnidade.setEnabled(false);
                 if (JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(null,
                         "Confirma a exclusão do registro <ID = " + produto.getNomeProduto() + ">?", "Confirm",
                         JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)) {
@@ -380,9 +430,12 @@ public class ProdutoGUI extends JFrame {
                     daoProduto.remover(produto);
                     zerarAtributos();
                     mostrarBotoes(true);
-                    atvBotoes(false, true, false, false);
+                    atvBotoes(true, true, false, false);
                     textFieldNome.requestFocus();
                     textFieldNome.selectAll();
+                    textFieldId.setText("");
+                    textFieldId.setEditable(false);
+
                 }
             }
         });

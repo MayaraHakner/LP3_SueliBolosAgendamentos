@@ -11,7 +11,7 @@ private List<Sabor> lista = new ArrayList<>();    public DAOSabor(){
     }
 
     public int autoIdSabor() {
-        Integer a = (Integer) em.createQuery("SELECT MAX(e.idSabor) FROM Sabor) e ").getSingleResult();
+        Integer a = (Integer) em.createQuery("SELECT MAX(e.idSabor) FROM Sabor e ").getSingleResult();
         if (a != null) {
             return a + 1;
         } else {

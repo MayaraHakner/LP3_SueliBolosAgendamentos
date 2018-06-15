@@ -45,7 +45,7 @@ private List<Pedido> lista = new ArrayList<>();    public DAOPedido(){
 
         List<String> ls = new ArrayList<>();
         for (int i = 0; i < lf.size(); i++) {
-            ls.add(lf.get(i).getIdPedido() + "-" + lf.get(i).getClienteCodigoCliente());
+            ls.add(lf.get(i).getIdPedido() + "-" + lf.get(i).getClienteCodigoCliente().getNomeCliente());
         }
         return ls;
     }

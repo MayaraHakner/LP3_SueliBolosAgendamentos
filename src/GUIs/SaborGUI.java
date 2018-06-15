@@ -52,10 +52,10 @@ public class SaborGUI extends JFrame {
     JButton btnList = new JButton(iconeListar);
     private JLabel labelId = new JLabel("Id");
     private JLabel labelNome = new JLabel("Nome");
-    private JLabel labelStatus = new JLabel("Indisponível");
+    private JLabel labelStatus = new JLabel("Status");
     private JTextField textFieldId = new JTextField(15);
     private JTextField textFieldNome = new JTextField(15);
-    JCheckBox checkBoxStatus = new JCheckBox("Status");
+    JCheckBox checkBoxStatus = new JCheckBox("Indisponível");
     JPanel pnAvisos = new JPanel();
     JLabel labelAviso = new JLabel("");
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat();
@@ -108,7 +108,7 @@ public class SaborGUI extends JFrame {
     public SaborGUI(Point posicao, Dimension dimensao) {
 
         Sabor n;
-        setSize(1000, 400);
+        setSize(600, 300);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setTitle("CRUD - Sabor - GUI");
         atvBotoes(true, true, false, false);
@@ -255,8 +255,6 @@ public class SaborGUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 boolean deuRuim = false;
-                textFieldId.setEditable(false);
-                textFieldId.setText("");
 
                 if (qualAcao.equals("insert")) {
                     sabor = new Sabor();
@@ -269,12 +267,6 @@ public class SaborGUI extends JFrame {
                 }
                 sabor.setNomeSabor(String.valueOf(textFieldNome.getText()));
 
-                try {
-                    sabor.setIdSabor(daoSabor.autoIdSabor());
-                } catch (Exception erro2) {
-                    // deuRuim = true;
-                    textFieldId.setBackground(Color.red);
-                }
                 try {
                     sabor.setNomeSabor(String.valueOf((textFieldNome.getText())));
                 } catch (Exception erro2) {
@@ -289,6 +281,13 @@ public class SaborGUI extends JFrame {
                 }
                 if (!deuRuim) {
                     if (qualAcao.equals("insert")) {
+                        try {
+                            sabor.setIdSabor(daoSabor.autoIdSabor());
+                        } catch (Exception erro2) {
+                            // deuRuim = true;
+                            System.out.println("aqui");
+                            textFieldId.setBackground(Color.red);
+                        }
                         daoSabor.inserir(sabor);
                         labelAviso.setText("Registro inserido.");
                     } else {
@@ -304,6 +303,8 @@ public class SaborGUI extends JFrame {
                     labelAviso.setText("Erro nos dados - corrija");
                     labelAviso.setBackground(Color.red);
                 }
+                textFieldId.setEditable(false);
+                textFieldId.setText("");
             }
         });
         btnUpdate.addActionListener(new ActionListener() {
@@ -338,7 +339,7 @@ public class SaborGUI extends JFrame {
                     daoSabor.remover(sabor);
                     zerarAtributos();
                     mostrarBotoes(true);
-                    atvBotoes(false, true, false, false);
+                    atvBotoes(true, true, false, false);
                     textFieldNome.requestFocus();
                     textFieldNome.selectAll();
                     textFieldId.setEditable(false);

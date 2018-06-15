@@ -21,11 +21,13 @@ public class GUIProdutoListagem extends JDialog {
     JPanel painelTa = new JPanel();
     JScrollPane scroll = new JScrollPane(); SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     DecimalFormat decimalFormat = new DecimalFormat("###,###,##0.00");
-
+    DAOs.DAOSabor daoSabor = new DAOs.DAOSabor();
+    DAOs.DAOUnMedida daoUnMedida = new DAOs.DAOUnMedida();
+    
 
     public GUIProdutoListagem(List<Produto> texto, int posX, int posY, Dimension dimensao) {
         setTitle("Listagem de Produto");
-        setSize(dimensao);//tamanho da janela
+        setSize(700,300);//tamanho da janela
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);//libera ao sair (tira da memÃ³ria a classe
         setLayout(new BorderLayout());//informa qual gerenciador de layout serÃ¡ usado
         setBackground(Color.CYAN);//cor do fundo da janela
@@ -39,12 +41,12 @@ String[] colunas = new String[]{ "id","nome","status","unMedida","sabor"};
 String[][] dados = new String[0][5];
         DefaultTableModel model = new DefaultTableModel(dados, colunas);
         JTable tabela = new JTable(model);
-
+        tabela.setEnabled(false);
         scroll.setViewportView(tabela);
 
         for (int i = 0; i < texto.size(); i++) {
 
-String[] linha = new String[]{String.valueOf(texto.get(i).getIdProduto()),String.valueOf(texto.get(i).getNomeProduto()),String.valueOf(texto.get(i).getStatus()),String.valueOf(texto.get(i).getUnMedidaIdUnMedida()),String.valueOf(texto.get(i).getSaborIdSabor()),};
+String[] linha = new String[]{String.valueOf(texto.get(i).getIdProduto()),String.valueOf(texto.get(i).getNomeProduto()),String.valueOf(texto.get(i).getStatus()),String.valueOf(texto.get(i).getUnMedidaIdUnMedida().getNomeUnidadeMedida()),String.valueOf(texto.get(i).getSaborIdSabor().getNomeSabor()),};
             model.addRow(linha);
         }
 

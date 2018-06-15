@@ -2,6 +2,7 @@ package DAOs;
 
 import Entidades.PrecoProduto;
 import Entidades.PrecoProdutoPK;
+import Entidades.Produto;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,8 @@ import java.util.List;
 public class DAOPrecoProduto extends DAOGenerico<PrecoProduto> {
 
     private List<PrecoProduto> lista = new ArrayList<>();
+    Produto produto = new Produto();
+    DAOProduto daoProduto = new DAOProduto();
 
     public DAOPrecoProduto() {
         super(PrecoProduto.class);
@@ -20,7 +23,7 @@ public class DAOPrecoProduto extends DAOGenerico<PrecoProduto> {
     }
 
     public List<PrecoProduto> listByNome(String nome) {
-        return em.createQuery("SELECT e FROM PrecoProduto e WHERE e.produto.nomeProduto) LIKE :nome").setParameter("nome", "%" + nome + "%").getResultList();
+        return em.createQuery("SELECT e FROM PrecoProduto e WHERE e.produto.nomeProduto LIKE :nome").setParameter("nome", "%" + nome + "%").getResultList();
     }
 
     public List<PrecoProduto> listById(int id) {

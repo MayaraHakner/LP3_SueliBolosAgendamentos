@@ -8,14 +8,13 @@ package Entidades;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -35,13 +34,8 @@ public class Status implements Serializable {
     private Integer idStatus;
     @Column(name = "nome_status")
     private String nomeStatus;
-    @JoinTable(name = "status_status", joinColumns = {
-        @JoinColumn(name = "Status_id_status", referencedColumnName = "id_status")}, inverseJoinColumns = {
-        @JoinColumn(name = "statusList_id_status", referencedColumnName = "id_status")})
-    @ManyToMany
-    private List<Status> statusList;
-    @ManyToMany(mappedBy = "statusList")
-    private List<Status> statusList1;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "statusIdStatus")
+    private List<Funcionario> funcionarioList;
 
     public Status() {
     }
@@ -66,20 +60,12 @@ public class Status implements Serializable {
         this.nomeStatus = nomeStatus;
     }
 
-    public List<Status> getStatusList() {
-        return statusList;
+    public List<Funcionario> getFuncionarioList() {
+        return funcionarioList;
     }
 
-    public void setStatusList(List<Status> statusList) {
-        this.statusList = statusList;
-    }
-
-    public List<Status> getStatusList1() {
-        return statusList1;
-    }
-
-    public void setStatusList1(List<Status> statusList1) {
-        this.statusList1 = statusList1;
+    public void setFuncionarioList(List<Funcionario> funcionarioList) {
+        this.funcionarioList = funcionarioList;
     }
 
     @Override

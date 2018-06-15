@@ -102,7 +102,7 @@ public class UnidadeMedidaGUI extends JFrame {
 
     public UnidadeMedidaGUI(Point posicao, Dimension dimensao) {
         UnMedida n;
-        setSize(1000, 400);
+        setSize(600, 200);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setTitle("CRUD - UnMedida - GUI");
         atvBotoes(false, true, false, false);
@@ -189,7 +189,7 @@ public class UnidadeMedidaGUI extends JFrame {
                         unidademedida.setIdUnMedida(String.valueOf(textFieldId.getText()));
                         unidademedida = daoUnMedida.obter(unidademedida.getIdUnMedida());
                         if (unidademedida != null) { //se encontrou na lista
-
+                            textFieldId.setEditable(false);
                             textFieldId.setText(String.valueOf(unidademedida.getIdUnMedida()));
                             textFieldNome.setText(String.valueOf(unidademedida.getNomeUnidadeMedida()));
                             atvBotoes(false, true, true, true);

@@ -1,5 +1,6 @@
 package GUIs;
 
+import DAOs.DAOProduto;
 import Entidades.PrecoProduto;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -22,13 +23,15 @@ public class GUIPrecoProdutoPKListagem extends JDialog {
     JScrollPane scroll = new JScrollPane();
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     DecimalFormat decimalFormat = new DecimalFormat("###,###,##0.00");
+    DAOProduto daoProduto = new DAOProduto();
+    
 
     public GUIPrecoProdutoPKListagem(List<PrecoProduto> texto, int posX, int posY, Dimension dimensao) {
         if (texto==null) {
             System.out.println("aqui"); return ;
         }
         setTitle("Listagem de PrecoProdutoPK");
-        setSize(dimensao);//tamanho da janela
+        setSize(700,300);//tamanho da janela
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);//libera ao sair (tira da memÃ³ria a classe
         setLayout(new BorderLayout());//informa qual gerenciador de layout serÃ¡ usado
         setBackground(Color.CYAN);//cor do fundo da janela
@@ -37,19 +40,19 @@ public class GUIPrecoProdutoPKListagem extends JDialog {
 
         JToolBar toolBar = new JToolBar();
 
-        String[] colunas = new String[]{"produtoIdProduto", "Nome",
-            "dataPrecoProduto", "Preço"};
+        String[] colunas = new String[]{"Id Produto", "Nome",
+            "Data", "Preço"};
 
         String[][] dados = new String[0][3];
 
         DefaultTableModel model = new DefaultTableModel(dados, colunas);
         JTable tabela = new JTable(model);
-
+tabela.setEnabled(false);
         scroll.setViewportView(tabela);
 
         for (int i = 0; i < texto.size(); i++) {
             String[] linha = new String[]{String.valueOf(texto.get(i).getPrecoProdutoPK().getProdutoIdProduto()),
-                texto.get(i).getProduto().getNomeProduto(),
+                String.valueOf(texto.get(i).getProduto().getNomeProduto()),
                 sdf.format(texto.get(i).getPrecoProdutoPK().getDataPrecoProduto()),
                 String.valueOf(texto.get(i).getPreco())};
             model.addRow(linha);

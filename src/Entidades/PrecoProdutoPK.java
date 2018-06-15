@@ -22,7 +22,7 @@ public class PrecoProdutoPK implements Serializable {
 
     @Basic(optional = false)
     @Column(name = "data_preco_produto")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date dataPrecoProduto;
     @Basic(optional = false)
     @Column(name = "produto_id_produto")
