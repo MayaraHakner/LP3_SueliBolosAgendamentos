@@ -7,7 +7,7 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.util.List;
-import javax.swing.JDialog;
+import javax.swing.JDialog; 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
