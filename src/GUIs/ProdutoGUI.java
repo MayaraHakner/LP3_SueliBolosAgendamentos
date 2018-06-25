@@ -259,7 +259,7 @@ public class ProdutoGUI extends JFrame {
                 textFieldId.setText(textFieldId.getText().trim());//caso tenham sido digitados espaços
 
                 if (textFieldId.getText().equals("")) {
-                    List<String> listaAuxiliar = daoProduto.listInOrderNomeStrings("nome");
+                    List<String> listaAuxiliar = daoProduto.listInOrderNomeStrings("id");
                     if (listaAuxiliar.size() > 0) {
                         Point lc = btnRetrieve.getLocationOnScreen();
                         lc.x = lc.x + btnRetrieve.getWidth();
@@ -292,11 +292,11 @@ public class ProdutoGUI extends JFrame {
                             textFieldSabor.setText(String.valueOf(produto.getSaborIdSabor().getIdSabor()));
                             atvBotoes(true, true, true, true);
 
-                            habilitarAtributos(true, false, false, false, false);
+                            habilitarAtributos(false, false, false, false, false);
                             labelAviso.setText("Encontrou - clic [Pesquisar], [Alterar] ou [Excluir]");
                             qualAcao = "encontrou";
                         } else {
-                            atvBotoes(true, true, false, false);
+                            atvBotoes(false, true, false, false);
                             zerarAtributos();
                             labelAviso.setText("Não cadastrado - clic [Inserir] ou digite outra id [Pesquisar]");
                         }
@@ -413,7 +413,7 @@ public class ProdutoGUI extends JFrame {
                 textFieldId.setText("");
                 textFieldId.setEditable(false);
 
-                habilitarAtributos(true, false, false, false, false);
+                habilitarAtributos(false, false, false, false, false);
                 btnRetrieveSabor.setEnabled(false);
                 btnRetrieveUnidade.setEnabled(false);
             }

@@ -61,9 +61,9 @@ public class FuncionarioGUI1 extends JFrame {
     JButton btnList = new JButton(iconeListar);
     private JLabel labelId = new JLabel("Id");
     private JLabel labelNome = new JLabel("Nome");
-    private JLabel labelDatanasc = new JLabel("Datanasc");
+    private JLabel labelDatanasc = new JLabel("Data de Nascimento");
     private JLabel labelTelefone = new JLabel("Telefone");
-    private JLabel labelEndereco = new JLabel("Endereco");
+    private JLabel labelEndereco = new JLabel("Endereço");
     private JLabel labelStatus = new JLabel("Status");
     private JLabel labelFoto = new JLabel();
     private JTextField textFieldId = new JTextField(15);
@@ -269,15 +269,16 @@ public class FuncionarioGUI1 extends JFrame {
             public void mouseClicked(MouseEvent e) {
                 if (m == false) {
                 } else {
+                    String caminho = "";
                     JFileChooser fc = new JFileChooser();
                     fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
                     if (fc.showOpenDialog(cp) == JFileChooser.APPROVE_OPTION) {
                         File img = fc.getSelectedFile();
-                        String caminho = fc.getSelectedFile().getAbsolutePath();
+                        caminho = fc.getSelectedFile().getAbsolutePath();
                         System.out.println(caminho);
                         funcionario.setFotoFuncionario(caminho);
-                        caminho = "";
+
                         try {
                             ImageIcon icone = new javax.swing.ImageIcon(img.getAbsolutePath());
                             Image imagemAux;
@@ -351,7 +352,7 @@ public class FuncionarioGUI1 extends JFrame {
                             try {
                                 //carrega uma imagem e ajusta seu tamanho
                                 // String caminho = "/imagens/" + tfId.getText() + ".jpg";
-                                String caminho = "/imagens/" + textFieldId.getText() + ".jpg";
+                                String caminho = "/imagens/" + funcionario.getIdFuncionario() + ".jpg";
                                 Image imagemAux;
                                 ImageIcon icone = new ImageIcon(getClass().getResource(caminho));
                                 imagemAux = icone.getImage();
@@ -360,6 +361,11 @@ public class FuncionarioGUI1 extends JFrame {
                                 labelFoto.setIcon(icone);
                             } catch (Exception err) {
                                 String caminho = "/imagens/silhueta.jpg";
+                                Image imagemAux;
+                                ImageIcon icone = new ImageIcon(getClass().getResource(caminho));
+                                imagemAux = icone.getImage();
+                                icone.setImage(imagemAux.getScaledInstance(200, 200, Image.SCALE_FAST));
+                                labelFoto.setIcon(icone);
 
                             }
                             atvBotoes(true, true, true, true);
@@ -368,6 +374,7 @@ public class FuncionarioGUI1 extends JFrame {
                             labelAviso.setText("Encontrou - clic [Pesquisar], [Alterar] ou [Excluir]");
                             qualAcao = "encontrou";
                         } else {
+
                             atvBotoes(true, true, false, false);
                             zerarAtributos();
                             labelAviso.setText("Não cadastrado - clic [Inserir] ou digite outra id [Pesquisar]");
@@ -450,12 +457,6 @@ public class FuncionarioGUI1 extends JFrame {
                     textFieldId.setBackground(Color.red);
                 }
 
-                CopiaImagem copiaImagem = new CopiaImagem();
-                try {
-
-                    CopiaImagem.copiar(funcionario.getFotoFuncionario(), "C:\\Users\\Mayara Hakner\\Documents\\NetBeansProjects\\SueliBolosAgendamentosGUIUp\\src\\imagens\\" + textFieldId.getText() + ".jpg");
-                } catch (Exception erro) {
-                }
                 if (!deuRuim) {
                     if (qualAcao.equals("insert")) {
                         try {
@@ -470,10 +471,17 @@ public class FuncionarioGUI1 extends JFrame {
                         daoFuncionario.atualizar(funcionario);
                         labelAviso.setText("Registro alterado.");
                     }
+                    CopiaImagem copiaImagem = new CopiaImagem();
+                    try {
+                        System.out.println(funcionario.getFotoFuncionario());
+                        CopiaImagem.copiar(funcionario.getFotoFuncionario(), "C:\\Users\\Mayara Hakner\\Documents\\NetBeansProjects\\SueliBolosAgendamentosGUIUp\\src\\imagens\\" + funcionario.getIdFuncionario() + ".jpg");
+                    } catch (Exception erro) {
+                        System.out.println("ruim na imagem");
+                    }
 
-                    habilitarAtributos(true, false, false, false, false, false, false);
+                    habilitarAtributos(false, false, false, false, false, false, false);
                     mostrarBotoes(true);
-                    atvBotoes(false, true, false, false);
+                    atvBotoes(true, true, false, false);
                     btnRetrieveFK.setEnabled(false);
                 }//!deu ruim
                 else {
@@ -504,7 +512,7 @@ public class FuncionarioGUI1 extends JFrame {
                 m = false;
                 textFieldId.setText("");
                 textFieldId.setEditable(false);
-                habilitarAtributos(true, false, false, false, false, false, false);
+                habilitarAtributos(false, false, false, false, false, false, false);
                 btnRetrieveFK.setEnabled(false);
 
             }

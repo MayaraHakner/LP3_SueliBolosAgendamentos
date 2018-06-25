@@ -326,7 +326,7 @@ public class SaborGUI extends JFrame {
                 textFieldId.setEditable(false);
                 textFieldId.setText("");
 
-                habilitarAtributos(true, false, false);
+                habilitarAtributos(false, false, false);
             }
         });
         btnDelete.addActionListener(new ActionListener() {

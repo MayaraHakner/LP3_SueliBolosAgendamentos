@@ -50,7 +50,7 @@ public class DAOPrecoProduto extends DAOGenerico<PrecoProduto> {
         List<String> ls = new ArrayList<>();
         for (int i = 0; i < lf.size(); i++) {
             ls.add(lf.get(i).getPrecoProdutoPK().getProdutoIdProduto() + "-"
-                    + lf.get(i).getProduto().getNomeProduto() + "-"
+                    + daoProduto.obter(lf.get(i).getPrecoProdutoPK().getProdutoIdProduto()).getNomeProduto()+ "-"
                     + sdf.format(lf.get(i).getPrecoProdutoPK().getDataPrecoProduto())
                     + "-" + lf.get(i).getPreco());
         }

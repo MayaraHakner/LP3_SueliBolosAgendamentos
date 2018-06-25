@@ -72,6 +72,7 @@ public class GUIPrecoProdutoPK extends JDialog {
     FerramentasParaData ferramentasParaData = new FerramentasParaData();
     Date dataDatanasc;
     SimpleDateFormat sdfDatanasc = new SimpleDateFormat("dd/MM/yyyy");
+    Produto produto = new Produto();
 
     private void atvBotoes(boolean c, boolean r, boolean u, boolean d) {
         btnCreate.setEnabled(c);
@@ -201,6 +202,8 @@ public class GUIPrecoProdutoPK extends JDialog {
         btnRetrieve.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
+                
+                
                 precoProduto = new PrecoProduto();
                 textFieldProdutoIdProduto.setText(textFieldProdutoIdProduto.getText().trim());//caso tenham sido digitados espaços
                 DAOPrecoProduto daoPrecoProduto1 = new DAOPrecoProduto();
@@ -242,7 +245,8 @@ public class GUIPrecoProdutoPK extends JDialog {
                     try {
                         PrecoProdutoPK precoProdutoPK = new PrecoProdutoPK();
                         precoProdutoPK.setProdutoIdProduto(Integer.valueOf(textFieldProdutoIdProduto.getText()));
-
+                        
+                        
                         precoProdutoPK.setDataPrecoProduto(sdf.parse((textFieldDataPrecoProduto.getText())));
                         try {
                             sdf.setLenient(false);
@@ -252,7 +256,7 @@ public class GUIPrecoProdutoPK extends JDialog {
 
                         } catch (Exception errroooo) {
 
-                            //textFieldProdutoIdProduto.setBackground(Color.red);
+                            textFieldProdutoIdProduto.setBackground(Color.red);
                             textFieldDataPrecoProduto.setBackground(Color.red);
                         }
                         DAOPrecoProduto daoPrecoProduto = new DAOPrecoProduto();
@@ -265,9 +269,21 @@ public class GUIPrecoProdutoPK extends JDialog {
                             labelAviso.setText("Encontrou - clic [Pesquisar], [Alterar] ou [Excluir]");
                             acao = "encontrou";
                         } else {  //não achou na lista
-                            atvBotoes(true, true, false, false);
+                            try {
+                                produto = daoProduto.obter(Integer.valueOf(textFieldProdutoIdProduto.getText()));
+                                if (produto ==null) {
+                                    labelAviso.setText("Produto não cadastrado " );
+                                atvBotoes(false, true, false, false);
+                                }
+                                else{
+                                    atvBotoes(true, true, false, false);
                             zerarAtributos();
                             labelAviso.setText("Não cadastrado - clic [Inserir] ou digite outra id [Pesquisar]");
+                                }
+                                
+                            } catch (Exception oooo) {
+                                
+                            }
                         }
                         textFieldProdutoIdProduto.setBackground(Color.green);
                         textFieldDataPrecoProduto.setBackground(Color.green);
@@ -366,7 +382,7 @@ public class GUIPrecoProdutoPK extends JDialog {
             public void actionPerformed(ActionEvent ae) {
                 if (JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(null,
                         "Confirma a exclusão do registro?\n "
-                        + precoProduto.getProduto().getNomeProduto() + "\n"
+                        + daoProduto.obter(precoProduto.getPrecoProdutoPK().getProdutoIdProduto()).getNomeProduto() + "\n"
                         + sdf.format(precoProduto.getPrecoProdutoPK().getDataPrecoProduto()) + "\n"
                         + "R$" + precoProduto.getPreco() + "\n",
                         "Confirm",

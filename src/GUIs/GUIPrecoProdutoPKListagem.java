@@ -52,7 +52,7 @@ tabela.setEnabled(false);
 
         for (int i = 0; i < texto.size(); i++) {
             String[] linha = new String[]{String.valueOf(texto.get(i).getPrecoProdutoPK().getProdutoIdProduto()),
-                String.valueOf(texto.get(i).getProduto().getNomeProduto()),
+                String.valueOf(daoProduto.obter(texto.get(i).getPrecoProdutoPK().getProdutoIdProduto()).getNomeProduto()),
                 sdf.format(texto.get(i).getPrecoProdutoPK().getDataPrecoProduto()),
                 String.valueOf(texto.get(i).getPreco())};
             model.addRow(linha);

@@ -203,7 +203,7 @@ public class ClienteGUI extends JFrame {
                             textFieldNome.setText(String.valueOf(cliente.getNomeCliente()));
                             textFieldEndereco.setText(String.valueOf(cliente.getEnderecoCliente()));
                             textFieldObservacao.setText(String.valueOf(cliente.getObservacaoCliente()));
-                            atvBotoes(false, true, true, true);
+                            atvBotoes(true, true, true, true);
 
                             habilitarAtributos(false, false, false, false);
                             labelAviso.setText("Encontrou - clic [Pesquisar], [Alterar] ou [Excluir]");

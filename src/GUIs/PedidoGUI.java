@@ -408,6 +408,8 @@ public class PedidoGUI extends JFrame {
                 else {
                     labelAviso.setText("Erro nos dados - corrija");
                     labelAviso.setBackground(Color.red);
+                    btnRetrieveCliente.setEnabled(true);
+                    btnRetrieveFuncionario.setEnabled(true);
                 }
                 textFieldId.setText("");
                 textFieldId.setEditable(false);
